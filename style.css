@@ -19,11 +19,16 @@
 
 .inactive:hover {
   background-color: red;
+  color: white;
+  transition: background-color 0.8s;
+  transition: color 0.6s;
 }
 
 .active:hover {
   background-color: green;
   color: white;
+  transition: background-color 0.8;
+  transition: color 0.6s;
 }
 
 #topRow {
@@ -54,6 +59,7 @@
 
 #middleRow button:hover {
   background-color: #d4ac0d; 
+  
 }
 
 #bottomRow button {
@@ -62,6 +68,7 @@
   margin-left: 1%;
   margin-top: 1%;
   border-style: none;
+
 }
 
 #buttons {
