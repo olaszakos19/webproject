@@ -103,35 +103,41 @@ function clear() {
 }
 
 function shwPanel(num) {
-  //draw
-  if (num == 0) {
+  // draw
+  if (num === 0) {
+    alert("Döntetlen, legközelebb biztos sikerül");
   }
 
-  //loose
-  if (num == 1) {
+  // loose
+  if (num === 2) {
+    alert("Sajnos vesztettél!");
   }
 
-  //win
-  if (num == 2) {
+  // win
+  if (num === 1) {
+    alert("Gratulálok ön nyert");
   }
 }
 
 function result() {
   console.log("p:" + sPpoint);
   console.log("h:" + sHpoint);
+
   if (sPpoint > sHpoint) {
+    // win
     MONEY += BET * 2;
     shwPanel(1);
-  }
-  if (sHpoint == sPpoint) {
+  } else if (sPpoint === sHpoint) {
+    // draw
     MONEY += BET;
+    shwPanel(0);
+  } else if (sPpoint < sHpoint) {
+    // loose
     shwPanel(2);
   }
-  if (sPpoint < sHpoint) {
-    //loose
-    shwPanel(0);
-  }
 }
+
+
 
 function wait(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
