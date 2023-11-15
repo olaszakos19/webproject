@@ -27,7 +27,7 @@
 .active:hover {
   background-color: green;
   color: white;
-  transition: background-color 0.8;
+  transition: background-color 0.8s;
   
 }
 

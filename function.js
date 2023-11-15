@@ -57,7 +57,6 @@ function bet(n) {
 
 function playerRoll() {
   if (ROLLS < 3 && BET != 0) {
-    console.log("--player turn--");
     rollDice(1);
     ROLLS++;
   } else {
@@ -90,8 +89,6 @@ function clear() {
     document.getElementById(pointDiv[i]).className = "pointBtn inactive";
   }
 
-
-
   for (var i = 0; i < buttonTexts.length; i++) {
     const buttonId = pointDiv[i];
     const buttonElement = document.getElementById(buttonId);
@@ -120,9 +117,6 @@ function shwPanel(num) {
 }
 
 function result() {
-  console.log("p:" + sPpoint);
-  console.log("h:" + sHpoint);
-
   if (sPpoint > sHpoint) {
     // win
     MONEY += BET * 2;
@@ -136,8 +130,6 @@ function result() {
     shwPanel(2);
   }
 }
-
-
 
 function wait(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -157,7 +149,6 @@ function rollDice(turn) {
 
     for (var i = 0; i < pPoint.length; i++) {
       pPoint[i] = Math.floor(Math.random() * 6) + 1;
-      console.log(pPoint[i]);
       var img = document.getElementById(divs[i]);
       img.innerHTML = "<img src=images/" + pPoint[i] + ".png>";
     }
@@ -497,8 +488,7 @@ function EnemyRoll() {
       setTimeout(function () {
         pause(round + 1);
       }, 2000);
-    }
-    else  {
+    } else {
       result();
       setTimeout(clear, 2000);
     }
