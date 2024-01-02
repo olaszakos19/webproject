@@ -21,10 +21,6 @@ $kapcsolat
     ]);
 
 
-$kapcsolat
-    ->prepare("INSERT INTO ranks (userID) VALUES (:user_id)")
-    ->execute([
-        'user_id' => $newUserId,
-    ]);
+
 
 header("Location: login.php");
