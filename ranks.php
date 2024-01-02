@@ -4,6 +4,7 @@ session_start();
 if (!isset($_SESSION["ID"])) {
     header("Location: login.php");
 }
+echo "<meta charset='UTF-8'>";
 echo "<link rel='stylesheet' type='text/css' href='ranks_stl.css'>";  
 $i = 0;
 
@@ -15,10 +16,10 @@ $sql = $kapcsolat->query("
 ");
 
 
-echo "<table border='1'>
+echo "<table>
         <tr>
             <th>Helyezés</th>
-            <th>Felhasználó Név</th>
+            <th>Felhasználónév</th>
             <th>Győzelmek száma</th>
         </tr>";
 
