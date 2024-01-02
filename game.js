@@ -5,11 +5,11 @@ const pointDiv = [
   "drill",
   "doublePair",
   "four",
-  "littleRow",
-  "fullHouse",
-  "bigRow",
-  "redRow",
-  "blackRow",
+  "little",
+  "house",
+  "big",
+  "red",
+  "black",
 ];
 const buttonTexts = [
   "Összeg",
@@ -24,11 +24,18 @@ const buttonTexts = [
   "Fekete",
 ];
 
+console.log("Money:", money);
+
 var ROLLS = 0;
 var locked = 0;
 
-var MONEY = 500;
+var winer = 0;
+
+var MONEY = money;
+
 var BET = 0;
+
+var stat = "";
 
 const pPoint = [0, 0, 0, 0, 0];
 const hPoint = [0, 0, 0, 0, 0];
@@ -39,7 +46,6 @@ var sHpoint = 0;
 function settings() {
   document.getElementById("rollBtn").className = "fstRow inactive";
   document.getElementById("pMoney").innerHTML = "Pénzösszeg: " + MONEY + "$";
-
   for (var i = 0; i < pointDiv.length; i++) {
     document.getElementById(pointDiv[i]).className = "pointBtn inactive";
   }
@@ -78,6 +84,7 @@ function clear() {
   sHpoint = 0;
   sPpoint = 0;
   BET = 0;
+  winer = 0;
   document.getElementById("playerPoints").innerHTML =
     "Játékos pontja: " + sPpoint;
   document.getElementById("housePoints").innerHTML = "A ház pontja: " + sHpoint;
@@ -116,19 +123,51 @@ function shwPanel(num) {
   }
 }
 
+function updateData(money, winer, stat) {
+  var xhr = new XMLHttpRequest();
+  xhr.open("POST", "update.php", true);
+  xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+  xhr.send(
+    "money=" +
+      encodeURIComponent(money) +
+      "&winer=" +
+      encodeURIComponent(winer) +
+      "&stat=" +
+      encodeURIComponent(stat)
+  );
+  xhr.onreadystatechange = function () {
+    if (xhr.readyState == 4) {
+      if (xhr.status == 200) {
+        handleServerResponse(xhr.responseText);
+      } else {
+        console.error("Hiba a szerver válaszában. Státusz kód: " + xhr.status);
+      }
+    }
+  };
+}
+
+function handleServerResponse(responseText) {
+  console.log("Szerver válasza: " + responseText);
+}
+
 function result() {
   if (sPpoint > sHpoint) {
     // win
     MONEY += BET * 2;
     shwPanel(1);
+    winer = 1;
   } else if (sPpoint === sHpoint) {
     // draw
     MONEY += BET;
     shwPanel(0);
+    winer = 0;
   } else if (sPpoint < sHpoint) {
     // loose
     shwPanel(2);
+    winer = 0;
   }
+  console.log(stat);
+  updateData(MONEY, winer, stat);
 }
 
 function wait(ms) {
@@ -146,7 +185,7 @@ function rollDice(turn) {
   }
   if (turn == 1) {
     //combos(1);
-
+    stat = "";
     for (var i = 0; i < pPoint.length; i++) {
       pPoint[i] = Math.floor(Math.random() * 6) + 1;
       var img = document.getElementById(divs[i]);
@@ -157,6 +196,7 @@ function rollDice(turn) {
 }
 
 function getPoint(id) {
+  stat = id;
   var p = document.getElementById(id).value;
   if (p != 0) {
     sPpoint = p * 1;
@@ -217,41 +257,41 @@ function combos(turn) {
     if (checkFullHouse(pPoint) == true) {
       var points = 30;
       var name = "Full House";
-      document.getElementById("fullHouse").value = points;
-      document.getElementById("fullHouse").innerHTML = name + ": " + points;
-      document.getElementById("fullHouse").className = "pointBtn active";
+      document.getElementById("house").value = points;
+      document.getElementById("house").innerHTML = name + ": " + points;
+      document.getElementById("house").className = "pointBtn active";
     }
 
     if (checkKisSor(pPoint) == true) {
       var points = 40;
       var name = "Kis Sor";
-      document.getElementById("littleRow").value = points;
-      document.getElementById("littleRow").innerHTML = name + ": " + points;
-      document.getElementById("littleRow").className = "pointBtn active";
+      document.getElementById("little").value = points;
+      document.getElementById("little").innerHTML = name + ": " + points;
+      document.getElementById("little").className = "pointBtn active";
     }
 
     if (checkNagySor(pPoint) == true) {
       var points = 60;
       var name = "Nagy Sor";
-      document.getElementById("bigRow").value = points;
-      document.getElementById("bigRow").innerHTML = name + ": " + points;
-      document.getElementById("bigRow").className = "pointBtn active";
+      document.getElementById("big").value = points;
+      document.getElementById("big").innerHTML = name + ": " + points;
+      document.getElementById("big").className = "pointBtn active";
     }
 
     if (checkRed(pPoint) == true) {
       var points = 80;
       var name = "Vörös";
-      document.getElementById("redRow").value = points;
-      document.getElementById("redRow").innerHTML = name + ": " + points;
-      document.getElementById("redRow").className = "pointBtn active";
+      document.getElementById("red").value = points;
+      document.getElementById("red").innerHTML = name + ": " + points;
+      document.getElementById("red").className = "pointBtn active";
     }
 
     if (checkBlack(pPoint) == true) {
       var points = 100;
       var name = "Fekete";
-      document.getElementById("blackRow").value = points;
-      document.getElementById("blackRow").innerHTML = name + ": " + points;
-      document.getElementById("blackRow").className = "pointBtn active";
+      document.getElementById("black").value = points;
+      document.getElementById("black").innerHTML = name + ": " + points;
+      document.getElementById("black").className = "pointBtn active";
     }
 
     if (checkPair(pPoint) != 0) {
@@ -269,6 +309,7 @@ function combos(turn) {
       document.getElementById("doublePair").value = points;
       document.getElementById("doublePair").innerHTML = name + ": " + points;
       document.getElementById("doublePair").className = "pointBtn active";
+      stat_name = "doublePair";
     }
 
     if (checkFour(pPoint) != 0) {
@@ -281,7 +322,7 @@ function combos(turn) {
     }
 
     if (checkDrill(pPoint) != 0) {
-      var n = checkPair(pPoint);
+      var n = checkDrill(pPoint);
       var points = n * 3;
       var name = "Drill";
       document.getElementById("drill").value = points;
@@ -296,28 +337,28 @@ function combos(turn) {
 
     //////////
     if (checkFullHouse(pPoint) == false) {
-      document.getElementById("fullHouse").className = "pointBtn inactive";
-      document.getElementById("fullHouse").innerHTML = "Full House";
+      document.getElementById("house").className = "pointBtn inactive";
+      document.getElementById("house").innerHTML = "Full House";
     }
 
     if (checkKisSor(pPoint) == false) {
-      document.getElementById("littleRow").className = "pointBtn inactive";
-      document.getElementById("littleRow").innerHTML = "Kis Sor";
+      document.getElementById("little").className = "pointBtn inactive";
+      document.getElementById("little").innerHTML = "Kis Sor";
     }
 
     if (checkNagySor(pPoint) == false) {
-      document.getElementById("bigRow").className = "pointBtn inactive";
-      document.getElementById("bigRow").innerHTML = "Nagy Sor";
+      document.getElementById("big").className = "pointBtn inactive";
+      document.getElementById("big").innerHTML = "Nagy Sor";
     }
 
     if (checkRed(pPoint) == false) {
-      document.getElementById("redRow").className = "pointBtn inactive";
-      document.getElementById("redRow").innerHTML = "Vörös";
+      document.getElementById("red").className = "pointBtn inactive";
+      document.getElementById("red").innerHTML = "Vörös";
     }
 
     if (checkBlack(pPoint) == false) {
-      document.getElementById("blackRow").className = "pointBtn inactive";
-      document.getElementById("blackRow").innerHTML = "Fekete";
+      document.getElementById("black").className = "pointBtn inactive";
+      document.getElementById("black").innerHTML = "Fekete";
     }
 
     if (checkPair(pPoint) == 0) {
